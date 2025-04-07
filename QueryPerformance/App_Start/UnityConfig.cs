@@ -10,6 +10,7 @@ using QueryPerformance.Services.Interfaces;
 using QueryPerformance.Services.Implementations;
 using QueryPerformance.AppServices.Interfaces;
 using QueryPerformance.AppServices.Implementations;
+using System.Data.Entity;
 
 namespace QueryPerformance
 {
@@ -19,22 +20,16 @@ namespace QueryPerformance
         {
             var container = new UnityContainer();
 
-            // Register DbContext
             container.RegisterType<SqlServerDbContext>(new HierarchicalLifetimeManager());
+            container.RegisterType<DbContext, SqlServerDbContext>(new HierarchicalLifetimeManager());
 
-            // Register Repositories
             container.RegisterType<IGenericRepository<OneThousandRows>, GenericRepository<OneThousandRows>>();
 
-            // Register Domain Services
             container.RegisterType<IRowsService, RowsService>();
-
-            // Register Application Services
             container.RegisterType<IRowsAppService, RowsAppService>();
 
-            // Register Controllers
             container.RegisterType<Controllers.RowsController>();
 
-            // Set the dependency resolver
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
     }
