@@ -1,28 +1,21 @@
 ﻿using System.Web.Mvc;
+using QueryPerformance.AppServices.Interfaces;
 using QueryPerformance.Models;
-using QueryPerformance.Repositories.Implementations;
-using QueryPerformance.Repositories.Interfaces;
-using QueryPerformance.Data;
-using QueryPerformance.Helpers;
 
 namespace QueryPerformance.Controllers
 {
     public class RowsController : Controller
     {
-        private readonly IGenericRepository<OneThousandRows> _oneThousandRowsRepository;
+        private readonly IRowsAppService _rowsAppService;
 
-        public RowsController()
+        public RowsController(IRowsAppService rowsAppService)
         {
-            _oneThousandRowsRepository = new GenericRepository<OneThousandRows>(new SqlServerDbContext());
+            _rowsAppService = rowsAppService;
         }
 
         public ViewResult Thousand(int page = 1, int recordsPerPage = 10, int groupSize = 5)
         {
-            var rows = _oneThousandRowsRepository.GetAllRows();
-
-            var pagedRows = PaginatedList<OneThousandRows>
-                                                          .Create(rows, page, recordsPerPage, groupSize);
-
+            var pagedRows = _rowsAppService.GetPaginatedRows(page, recordsPerPage, groupSize);
             return View(pagedRows);
         }
 
@@ -40,6 +33,5 @@ namespace QueryPerformance.Controllers
         {
             return View();
         }
-
     }
 }
