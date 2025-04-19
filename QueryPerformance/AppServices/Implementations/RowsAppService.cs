@@ -18,7 +18,13 @@ namespace QueryPerformance.AppServices.Implementations
         public PaginatedList<OneThousandRows> GetPaginatedRows(int page, int recordsPerPage, int groupSize)
         {
             var rows = _rowsService.GetAllRows();
-            return PaginatedList<OneThousandRows>.Create(rows, page, recordsPerPage, groupSize);
+
+            return PaginatedList<OneThousandRows>.Create(
+                rows,
+                page,
+                recordsPerPage,
+                groupSize
+            );
         }
 
         public PaginatedList<OneThousandRows> GetPaginatedRowsFilteredByAge(int minAge, int maxAge, int page, int recordsPerPage, int groupSize)

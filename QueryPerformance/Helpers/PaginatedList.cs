@@ -34,8 +34,12 @@ namespace QueryPerformance.Helpers
 
         public static PaginatedList<T> Create(IEnumerable<T> source, int pageIndex, int recordsPerPage, int groupSize)
         {
-            int count         = source.Count();
-            var items = source.Skip((pageIndex - 1) * recordsPerPage).Take(recordsPerPage).ToList();
+            int count = source.Count();
+
+            var items = source.Skip((pageIndex - 1) * recordsPerPage)
+                              .Take(recordsPerPage)
+                              .ToList();
+
             return new PaginatedList<T>(items, count, pageIndex, recordsPerPage, groupSize);
         }
     }
