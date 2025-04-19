@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using QueryPerformance.AppServices.Interfaces;
 using QueryPerformance.Helpers;
+using QueryPerformance.Helpers.Mappers;
 using QueryPerformance.Models;
+using QueryPerformance.Models.ViewModels;
 using QueryPerformance.Services.Interfaces;
 
 namespace QueryPerformance.AppServices.Implementations
@@ -15,22 +18,30 @@ namespace QueryPerformance.AppServices.Implementations
             _rowsService = rowsService;
         }
 
-        public PaginatedList<OneThousandRows> GetPaginatedRows(int page, int recordsPerPage, int groupSize)
+        public PaginatedList<OneThousandRowsViewModel> GetPaginatedRows(int page, int recordsPerPage, int groupSize)
         {
             var rows = _rowsService.GetAllRows();
+            var viewModels = rows.Select(OneThousandRowsMapper.ToViewModel).ToList();
 
-            return PaginatedList<OneThousandRows>.Create(
-                rows,
+            return PaginatedList<OneThousandRowsViewModel>.Create(
+                viewModels,
                 page,
                 recordsPerPage,
                 groupSize
             );
         }
 
-        public PaginatedList<OneThousandRows> GetPaginatedRowsFilteredByAge(int minAge, int maxAge, int page, int recordsPerPage, int groupSize)
+        public PaginatedList<OneThousandRowsViewModel> GetPaginatedRowsFilteredByAge(int minAge, int maxAge, int page, int recordsPerPage, int groupSize)
         {
             var filteredRows = _rowsService.FilterRowsByAge(minAge, maxAge);
-            return PaginatedList<OneThousandRows>.Create(filteredRows, page, recordsPerPage, groupSize);
+            var viewModels = filteredRows.Select(OneThousandRowsMapper.ToViewModel).ToList();
+            
+            return PaginatedList<OneThousandRowsViewModel>.Create(
+                viewModels,
+                page,
+                recordsPerPage,
+                groupSize
+            );
         }
     }
 } 
